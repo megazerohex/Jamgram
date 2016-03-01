@@ -7,15 +7,34 @@
 //
 
 import UIKit
+import Parse
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    var storyboard = UIStoryboard(name: "Main", bundle: nil)
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        
+        // Initialize Parse
+        // Set applicationId and server based on the values in the Heroku settings.
+        // clientKey is not used on Parse open source unless explicitly configured
+        Parse.initializeWithConfiguration(
+            ParseClientConfiguration(block: { (configuration:ParseMutableClientConfiguration) -> Void in
+                configuration.applicationId = "Jamgram"
+                configuration.clientKey = "b835vg67rfg863bruy"
+                configuration.server = "https://mighty-wave-30736.herokuapp.com/parse"
+            })
+        )
+        
+        //For checking if a user already exist 
+        if PFUser.currentUser() != nil {
+            print("The user is login")
+            let vc = storyboard.instantiateViewControllerWithIdentifier("HomeTabBar") as! UITabBarController
+            window?.rootViewController = vc
+        }
         return true
     }
 
